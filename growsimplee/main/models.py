@@ -11,11 +11,11 @@ class Location(models.Model):
 
 class product(models.Model):
     productID = models.CharField(max_length=200)
-    length = models.FloatField(null=True,blank=True)
-    breadth = models.FloatField(null=True,blank=True)
-    height = models.FloatField(null=True,blank=True)
     volume = models.FloatField(null=True,blank=True)
     delivered = models.BooleanField(default=False)
+    assigned = models.BooleanField(default=False)
 
-
-
+class Driver(models.Model):
+    person = models.CharField(max_length=200,null=True,blank=True)
+    path = models.CharField(max_length=200,null=True,blank=True)
+    active = models.BooleanField(default=True)
