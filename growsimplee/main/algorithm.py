@@ -119,28 +119,29 @@ def getLocations(driverPath, currentPoint):
             locations.append(location)
     return (newPath, locations)
 
-def driverDetails():
+def driverDetails(add):
     drivers = Driver.objects.filter(active=True)
     driverDetails = {}
     for i in drivers:
         driverPath = i.path
-        currentPoint = getcurrentPoint(driverPath)
-        details = getLocations(driverPath, currentPoint)
-        locations = details[1]
-        newpath = details[0]
-        instance = {
-            "originalPath" : driverPath,
-            "newPath" : newpath,
-            "locations" : locations,
-            "driver" : i,
-            "currentPoint" : currentPoint
-        }
+        if (add == True):
+            currentPoint = getcurrentPoint(driverPath)
+            details = getLocations(driverPath, currentPoint)
+            locations = details[1]
+            newpath = details[0]
+            instance = {
+                "newPath" : newpath,
+                "locations" : locations,
+                "driver" : i,
+                "currentPoint" : currentPoint
+            }
+        instance["originalPath"] = driverPath
         driverDetails[i.person] = instance
     return driverDetails
 
 def dynamicPointAddition():
     nonDeliveredProducts = product.objects.filter(assigned=False)
-    drivers = driverDetails()
+    drivers = driverDetails(True)
     for i in nonDeliveredProducts:
         sourceLocation = Location.objects.get(productID=i.productID, locationtype=True)
         destinationLocation = Location.objects.get(productID=i.productID, locationtype=False)
@@ -191,4 +192,10 @@ def dynamicPointAddition():
         destinationPointList = [destinationLocation]
         drivers[driver]["originalPath"] = drivers[driver]["originalPath"][0:a+b+1] + sourceProductList + drivers[driver]["originalPath"][a+b+1:a+b+c+1] + destinationProductList + drivers[driver]["originalPath"][a+b+c+1:]
         drivers[driver]["locations"] = drivers[driver]["locations"][0:b+1] + sourcePointList + drivers[driver]["locations"][b+1:b+c+1] + destinationPointList + drivers[driver]["locations"][b+c+1:]
+    return drivers
+
+def dynamicPointDeletion(productIDList):
+    drivers = driverDetails(False)
+    for i in drivers.keys():
+        drivers[i]["originalPath"] = [j for j in drivers[i]["originalPath"] if j[0] not in productIDList]
     return drivers
