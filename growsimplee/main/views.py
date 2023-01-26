@@ -14,6 +14,11 @@ class ProductView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gener
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    def get(self, request):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
         serializer = self.get_serializer(data = request.data, many=True)
         if serializer.is_valid():
