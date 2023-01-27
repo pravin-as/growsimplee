@@ -1,21 +1,21 @@
 from django.db import models
 
 # Create your models here.
-class Location(models.Model):
-    address = models.CharField(max_length=200,null=True,blank=True)
-    person = models.CharField(max_length=200,null=True,blank=True)
-    latitude = models.FloatField(null=True,blank=True)
-    longitude = models.FloatField(null=True,blank=True)
-    locationtype = models.BooleanField()
-    productID = models.CharField(max_length=200)
 
-class product(models.Model):
+class Product(models.Model):
     productID = models.CharField(max_length=200)
-    length = models.FloatField(null=True,blank=True)
-    breadth = models.FloatField(null=True,blank=True)
-    height = models.FloatField(null=True,blank=True)
     volume = models.FloatField(null=True,blank=True)
     delivered = models.BooleanField(default=False)
+    assigned = models.BooleanField(default=False)
+    sourceAddress = models.CharField(max_length=200,null=True,blank=True)
+    sourceLatitude = models.FloatField(null=True,blank=True)
+    sourceLongitude = models.FloatField(null=True,blank=True)
+    destinationAddress = models.CharField(max_length=200,null=True,blank=True)
+    destinationLatitude = models.FloatField(null=True,blank=True)
+    destinationLongitude = models.FloatField(null=True,blank=True)
+    person = models.CharField(max_length=200,null=True,blank=True)
 
-
-
+class Driver(models.Model):
+    person = models.CharField(max_length=200,null=True,blank=True)
+    path = models.CharField(max_length=200,null=True,blank=True)
+    active = models.BooleanField(default=True)

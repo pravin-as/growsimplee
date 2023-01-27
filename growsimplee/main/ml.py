@@ -134,5 +134,3 @@ width = wT
 length = wS
 
 volumetric_weight = (height * width * length) / 5000
-
-return volumetric_weight
